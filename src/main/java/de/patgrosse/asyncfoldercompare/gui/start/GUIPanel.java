@@ -183,31 +183,9 @@ public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolde
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == oldSelect) {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File("."));
-            if (oldFolder.isSelected()) {
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                chooser.setAcceptAllFileFilterUsed(false);
-            } else {
-                chooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
-            }
-            int returnVal = chooser.showOpenDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                oldField.setText(chooser.getSelectedFile().toURI().toString());
-            }
+            startFileChooser(oldFolder, oldField);
         } else if (e.getSource() == newSelect) {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File("."));
-            if (newFolder.isSelected()) {
-                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                chooser.setAcceptAllFileFilterUsed(false);
-            } else {
-                chooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
-            }
-            int returnVal = chooser.showOpenDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                newField.setText(chooser.getSelectedFile().toURI().toString());
-            }
+            startFileChooser(newFolder, newField);
         } else if (e.getSource() == startButton) {
             if (oldField.getText().trim().length() == 0) {
                 JOptionPane.showMessageDialog(this, "Please select an old folder/JSON file!", "Incomplete",
@@ -220,6 +198,21 @@ public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolde
                 return;
             }
             handleStart();
+        }
+    }
+
+    private void startFileChooser(JRadioButton folderButton, JTextField field) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        if (folderButton.isSelected()) {
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+        } else {
+            chooser.setFileFilter(new FileNameExtensionFilter("JSON Files", "json"));
+        }
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            field.setText(chooser.getSelectedFile().toURI().toString());
         }
     }
 

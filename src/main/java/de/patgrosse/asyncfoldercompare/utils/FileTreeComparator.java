@@ -59,9 +59,7 @@ public class FileTreeComparator {
 
     public ScanSession createScanSession(RootCompareFolder folder) {
         List<String> pluginNames = new LinkedList<>();
-        for (String plName : enabledPlugins.keySet()) {
-            pluginNames.add(plName);
-        }
+        pluginNames.addAll(enabledPlugins.keySet());
         return new ScanSession(folder, pluginNames);
     }
 
