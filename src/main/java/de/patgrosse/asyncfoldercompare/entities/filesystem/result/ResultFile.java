@@ -1,7 +1,10 @@
-package de.patgrosse.asyncfoldercompare.entities.filesystem;
+package de.patgrosse.asyncfoldercompare.entities.filesystem.result;
 
 import de.patgrosse.asyncfoldercompare.constants.CompareObjectType;
 import de.patgrosse.asyncfoldercompare.entities.compareresults.CompleteFileCompareResultHolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.IFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
 
 public class ResultFile extends ResultPathObject<RealFile> implements IFile {
     private CompleteFileCompareResultHolder fullResult;

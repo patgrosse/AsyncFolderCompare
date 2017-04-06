@@ -1,4 +1,4 @@
-package de.patgrosse.asyncfoldercompare.entities.filesystem;
+package de.patgrosse.asyncfoldercompare.entities.filesystem.real;
 
 import java.util.Collection;
 import java.util.Map;
@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import com.google.gson.annotations.Expose;
 
 import de.patgrosse.asyncfoldercompare.constants.CompareObjectType;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.IFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
 
 public class RealFolder extends PathObject implements IFolder<RealFolder, RealFile> {
     @Expose

@@ -1,7 +1,7 @@
 package de.patgrosse.asyncfoldercompare.matcher.files;
 
 import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
 
 public class StartsWithFileMatcher extends SingleFileMatcher {
 

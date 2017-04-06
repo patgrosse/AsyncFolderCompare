@@ -1,7 +1,7 @@
 package de.patgrosse.asyncfoldercompare.startup;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
 import de.patgrosse.asyncfoldercompare.utils.FileTreeComparator;
@@ -63,9 +63,9 @@ public class CLIStarter {
 
         if (line.hasOption("gui")) {
             FileTreeComparator tc = VFSUtils.createTreeComparator();
-            Pair<RootCompareFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
+            Pair<RootRealFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
                     lastSettings.getCredentialsOld());
-            Pair<RootCompareFolder, FileObject> newFolder = parseFolderFromCLI(tc, line, "new",
+            Pair<RootRealFolder, FileObject> newFolder = parseFolderFromCLI(tc, line, "new",
                     lastSettings.getCredentialsNew());
             LOG.info("Starting compare");
             ResultFolder resFolder = tc.compareFolders(oldFolder.getLeft(), newFolder.getLeft());
@@ -73,16 +73,16 @@ public class CLIStarter {
             AFCTreeGUI.startGUI(tc, resFolder, oldFolder.getRight(), newFolder.getRight());
         } else if (line.hasOption("mapjson")) {
             FileTreeComparator tc = VFSUtils.createTreeComparator();
-            Pair<RootCompareFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
+            Pair<RootRealFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
                     lastSettings.getCredentialsOld());
             LOG.info("Starting mapping");
             GsonUtils.saveFolderToJSON(tc, oldFolder.getLeft(), null, lastSettings.getCredentialsNew());
             LOG.info("Finished mapping");
         } else if (line.hasOption("dummycompare")) {
             FileTreeComparator tc = VFSUtils.createTreeComparator();
-            Pair<RootCompareFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
+            Pair<RootRealFolder, FileObject> oldFolder = parseFolderFromCLI(tc, line, "old",
                     lastSettings.getCredentialsOld());
-            Pair<RootCompareFolder, FileObject> oldFolder2 = parseFolderFromCLI(tc, line, "old",
+            Pair<RootRealFolder, FileObject> oldFolder2 = parseFolderFromCLI(tc, line, "old",
                     lastSettings.getCredentialsOld());
             LOG.info("Starting compare");
             ResultFolder resFolder = tc.compareFolders(oldFolder.getLeft(), oldFolder2.getLeft());
@@ -93,8 +93,8 @@ public class CLIStarter {
         }
     }
 
-    private static Pair<RootCompareFolder, FileObject> parseFolderFromCLI(FileTreeComparator comp, CommandLine line,
-                                                                          String paramPrefix, Credentials cred) throws Exception {
+    private static Pair<RootRealFolder, FileObject> parseFolderFromCLI(FileTreeComparator comp, CommandLine line,
+                                                                       String paramPrefix, Credentials cred) throws Exception {
         if (line.hasOption(paramPrefix + "JSONFile")) {
             return VFSUtils.parseUserInput(comp, line.getOptionValue(paramPrefix + "JSONFile"), true, cred);
         } else if (line.hasOption(paramPrefix + "FolderPath")) {

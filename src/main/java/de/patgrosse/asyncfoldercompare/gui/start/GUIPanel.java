@@ -19,8 +19,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.vfs2.FileObject;
@@ -218,7 +218,7 @@ public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolde
 
     private void handleStart() {
         FileTreeComparator tc = VFSUtils.createTreeComparator();
-        Pair<RootCompareFolder, FileObject> oldFolder, newFolder;
+        Pair<RootRealFolder, FileObject> oldFolder, newFolder;
         ResultFolder resFolder;
         try {
             oldFolder = VFSUtils.parseUserInput(tc, oldField.getText(), oldJSON.isSelected(),

@@ -4,24 +4,24 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 
 public class ScanSession {
     @Expose
-    private RootCompareFolder scannedFolder;
+    private RootRealFolder scannedFolder;
     @Expose
     private List<String> enabledPlugins;
 
-    public ScanSession(RootCompareFolder scannedFolder, List<String> enabledPlugins) {
+    public ScanSession(RootRealFolder scannedFolder, List<String> enabledPlugins) {
         this.scannedFolder = scannedFolder;
         this.enabledPlugins = enabledPlugins;
     }
 
-    public RootCompareFolder getScannedFolder() {
+    public RootRealFolder getScannedFolder() {
         return scannedFolder;
     }
 
-    public void setScannedFolder(RootCompareFolder scannedFolder) {
+    public void setScannedFolder(RootRealFolder scannedFolder) {
         this.scannedFolder = scannedFolder;
     }
 

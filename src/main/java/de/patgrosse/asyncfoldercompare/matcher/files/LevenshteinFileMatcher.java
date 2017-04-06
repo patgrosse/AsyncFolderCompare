@@ -13,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
 
 public class LevenshteinFileMatcher extends FileMatcher {
     private static final int DIFF_LIMIT = 10;

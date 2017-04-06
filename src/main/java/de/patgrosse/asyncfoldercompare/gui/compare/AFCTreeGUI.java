@@ -17,8 +17,8 @@ import javax.swing.UIManager;
 
 import de.patgrosse.asyncfoldercompare.constants.CopyAction;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
 import de.patgrosse.asyncfoldercompare.gui.GUITools;
 import de.patgrosse.asyncfoldercompare.gui.treetable.AbstractTreeTableModel;

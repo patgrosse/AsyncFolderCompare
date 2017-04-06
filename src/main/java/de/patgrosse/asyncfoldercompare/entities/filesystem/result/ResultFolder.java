@@ -1,10 +1,13 @@
-package de.patgrosse.asyncfoldercompare.entities.filesystem;
+package de.patgrosse.asyncfoldercompare.entities.filesystem.result;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
 import de.patgrosse.asyncfoldercompare.constants.CompareObjectType;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.IFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
 
 public class ResultFolder extends ResultPathObject<RealFolder> implements IFolder<ResultFolder, ResultFile> {
     private Map<String, ResultFolder> containedFolders;

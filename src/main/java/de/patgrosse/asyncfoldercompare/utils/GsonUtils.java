@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
 import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
@@ -49,7 +49,7 @@ public final class GsonUtils {
         return sess;
     }
 
-    private static void createRelativePaths(RootCompareFolder folder) {
+    private static void createRelativePaths(RootRealFolder folder) {
         List<String> relativePath = new LinkedList<>();
         folder.setRelativePath(relativePath);
         createRelativePaths(folder, relativePath);
@@ -91,7 +91,7 @@ public final class GsonUtils {
         return deserializeScanSession(jsonString);
     }
 
-    public static void saveFolderToJSON(FileTreeComparator comp, RootCompareFolder mappedFolder, String jsonURI,
+    public static void saveFolderToJSON(FileTreeComparator comp, RootRealFolder mappedFolder, String jsonURI,
                                         Credentials jsonCred) throws IOException {
         PrintWriter writer;
         if (jsonURI != null && jsonURI.length() != 0) {
@@ -109,7 +109,7 @@ public final class GsonUtils {
     public static void saveFolderToJSON(FileTreeComparator comp, String folderURI, Credentials folderCred,
                                         String jsonURI, Credentials jsonCred) throws IOException {
         FileObject fo = VFSUtils.resolveVFS(folderURI, folderCred);
-        RootCompareFolder mappedFolder = comp.mapFolder(fo);
+        RootRealFolder mappedFolder = comp.mapFolder(fo);
         saveFolderToJSON(comp, mappedFolder, jsonURI, jsonCred);
     }
 }

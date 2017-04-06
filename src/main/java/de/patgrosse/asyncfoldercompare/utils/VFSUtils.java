@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
 import de.patgrosse.asyncfoldercompare.matcher.files.KodiLevenshteinFileMatcher;
@@ -110,8 +110,8 @@ public final class VFSUtils {
         }
     }
 
-    public static Pair<RootCompareFolder, FileObject> parseUserInput(FileTreeComparator comp, String inputURI,
-                                                                     boolean isJSONFile, Credentials cred) throws IOException {
+    public static Pair<RootRealFolder, FileObject> parseUserInput(FileTreeComparator comp, String inputURI,
+                                                                  boolean isJSONFile, Credentials cred) throws IOException {
         if (isJSONFile) {
             ScanSession session = GsonUtils.readScanSessionFromJSON(inputURI, cred);
             return Pair.of(session.getScannedFolder(), null);

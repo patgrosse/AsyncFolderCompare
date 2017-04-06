@@ -1,4 +1,6 @@
-package de.patgrosse.asyncfoldercompare.entities.filesystem;
+package de.patgrosse.asyncfoldercompare.entities.filesystem.result;
+
+import de.patgrosse.asyncfoldercompare.entities.filesystem.RootFolder;
 
 import java.util.LinkedList;
 

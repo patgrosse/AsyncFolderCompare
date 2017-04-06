@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
 import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
 
 public abstract class SingleFileMatcher extends FileMatcher {

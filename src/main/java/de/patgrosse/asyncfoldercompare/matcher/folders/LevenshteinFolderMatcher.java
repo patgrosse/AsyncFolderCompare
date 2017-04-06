@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
 import de.patgrosse.asyncfoldercompare.utils.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;

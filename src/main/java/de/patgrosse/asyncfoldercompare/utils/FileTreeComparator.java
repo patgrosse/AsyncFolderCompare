@@ -21,12 +21,12 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 
 import de.patgrosse.asyncfoldercompare.entities.compareresults.PluginFileCompareResultHolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootCompareFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RootResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.RootResultFolder;
 import de.patgrosse.asyncfoldercompare.filter.Filter;
 import de.patgrosse.asyncfoldercompare.matcher.files.FileMatcher;
 
@@ -57,7 +57,7 @@ public class FileTreeComparator {
         return enabledPlugins.remove(name) != null;
     }
 
-    public ScanSession createScanSession(RootCompareFolder folder) {
+    public ScanSession createScanSession(RootRealFolder folder) {
         List<String> pluginNames = new LinkedList<>();
         pluginNames.addAll(enabledPlugins.keySet());
         return new ScanSession(folder, pluginNames);
@@ -73,13 +73,13 @@ public class FileTreeComparator {
         return allCheckNames;
     }
 
-    public RootCompareFolder mapFolder(FileObject directory) throws FileSystemException {
-        RootCompareFolder rfolder = new RootCompareFolder();
+    public RootRealFolder mapFolder(FileObject directory) throws FileSystemException {
+        RootRealFolder rfolder = new RootRealFolder();
         mapFolder(rfolder, directory, new LinkedList<>());
         return rfolder;
     }
 
-    public ResultFolder compareFolders(RootCompareFolder folderOld, RootCompareFolder folderNew) {
+    public ResultFolder compareFolders(RootRealFolder folderOld, RootRealFolder folderNew) {
         ResultFolder resultFolder = createResultFolder(folderOld, folderNew);
         compareFolder(resultFolder, folderOld, folderNew);
         return resultFolder;

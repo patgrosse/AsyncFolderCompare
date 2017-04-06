@@ -1,6 +1,6 @@
 package de.patgrosse.asyncfoldercompare.filter.folders;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.RealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
 import de.patgrosse.asyncfoldercompare.filter.Filter;
 
 public class HiddenFolderFilter extends Filter<RealFolder> {
