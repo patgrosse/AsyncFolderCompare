@@ -23,9 +23,11 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
+        <Root>
+        </Root>
+        <Logger name="de.patgrosse" level="debug">
             <AppenderRef ref="fullLog"/>
             <AppenderRef ref="consoleOutput"/>
-        </Root>
+        </Logger>
     </Loggers>
 </Configuration>

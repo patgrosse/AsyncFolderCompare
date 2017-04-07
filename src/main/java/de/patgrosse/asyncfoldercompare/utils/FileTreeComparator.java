@@ -1,36 +1,32 @@
 package de.patgrosse.asyncfoldercompare.utils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
 import de.patgrosse.asyncfoldercompare.entities.compareresults.CompleteFileCompareResultHolder;
+import de.patgrosse.asyncfoldercompare.entities.compareresults.PluginFileCompareResultHolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.RootResultFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
+import de.patgrosse.asyncfoldercompare.filter.Filter;
 import de.patgrosse.asyncfoldercompare.filter.FilterHelper;
 import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
+import de.patgrosse.asyncfoldercompare.matcher.files.FileMatcher;
 import de.patgrosse.asyncfoldercompare.matcher.folders.FolderMatcher;
 import de.patgrosse.asyncfoldercompare.plugins.ComparePlugin;
 import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.patgrosse.asyncfoldercompare.entities.compareresults.PluginFileCompareResultHolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.result.RootResultFolder;
-import de.patgrosse.asyncfoldercompare.filter.Filter;
-import de.patgrosse.asyncfoldercompare.matcher.files.FileMatcher;
+import java.util.*;
 
 public class FileTreeComparator {
+    private static Logger LOG = LoggerFactory.getLogger(FileTreeComparator.class);
     private Map<String, ComparePlugin> enabledPlugins;
     private FileMatcher fileMatcher;
     private FolderMatcher folderMatcher;
@@ -75,7 +71,9 @@ public class FileTreeComparator {
 
     public RootRealFolder mapFolder(FileObject directory) throws FileSystemException {
         RootRealFolder rfolder = new RootRealFolder();
+        LOG.info("Started mapping root folder " + directory.getName().getPath());
         mapFolder(rfolder, directory, new LinkedList<>());
+        LOG.info("Finished mapping root folder " + directory.getName().getPath());
         return rfolder;
     }
 
@@ -90,6 +88,7 @@ public class FileTreeComparator {
         if (directory == null) {
             throw new IllegalArgumentException();
         }
+        LOG.debug("Collecting data for folder " + directory.getName().getPath());
         for (FileObject file : directory.getChildren()) {
             if (file.equals(directory)) {
                 continue;
@@ -105,6 +104,7 @@ public class FileTreeComparator {
                 newRelativePath.add(file.getName().getBaseName());
                 mapFolder(rfolder, file, newRelativePath);
             } else {
+                LOG.debug("Collecting data for file " + file.getName().getPath());
                 RealFile rfile = new RealFile(file.getName().getBaseName());
                 rfile.setRelativePath(relativePath);
                 if (fileFilter.isObjectFiltered(rfile)) {
