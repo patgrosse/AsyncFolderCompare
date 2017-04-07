@@ -1,25 +1,10 @@
 package de.patgrosse.asyncfoldercompare.gui.compare;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
 import de.patgrosse.asyncfoldercompare.constants.CopyAction;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
 import de.patgrosse.asyncfoldercompare.gui.GUITools;
 import de.patgrosse.asyncfoldercompare.gui.treetable.AbstractTreeTableModel;
 import de.patgrosse.asyncfoldercompare.gui.treetable.TreeTable;
@@ -34,6 +19,10 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class AFCTreeGUI extends JFrame implements CopyCallbackFactory {
     private static final long serialVersionUID = -7503353678594701992L;
@@ -52,7 +41,16 @@ public class AFCTreeGUI extends JFrame implements CopyCallbackFactory {
         final TreeTable myTreeTable = new TreeTable(treeTableModel);
         myTreeTable.addMouseListener(new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                checkPopup(e);
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
+                checkPopup(e);
+            }
+
+            private void checkPopup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     int row = myTreeTable.rowAtPoint(e.getPoint());
                     int column = myTreeTable.columnAtPoint(e.getPoint());
