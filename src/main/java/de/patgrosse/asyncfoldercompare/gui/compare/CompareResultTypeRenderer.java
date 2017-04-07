@@ -1,12 +1,10 @@
 package de.patgrosse.asyncfoldercompare.gui.compare;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 public class CompareResultTypeRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 5147296913944333229L;
@@ -17,10 +15,22 @@ public class CompareResultTypeRenderer extends DefaultTableCellRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (value instanceof CompleteObjectCompareResult) {
             CompleteObjectCompareResult result = (CompleteObjectCompareResult) value;
-            if (result == CompleteObjectCompareResult.MATCH) {
-                setForeground(Color.LIGHT_GRAY);
-            } else {
-                setForeground(Color.RED);
+            switch (result) {
+                case MATCH:
+                    setForeground(Color.LIGHT_GRAY);
+                    break;
+                case NEW:
+                    setForeground(Color.GREEN);
+                    break;
+                case DELETED:
+                    setForeground(Color.RED);
+                    break;
+                case PREFERNEW:
+                case PREFEROLD:
+                case DIFFER:
+                case UNDEFINED:
+                    setForeground(Color.BLUE);
+                    break;
             }
         }
         return this;
