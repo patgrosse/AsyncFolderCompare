@@ -1,17 +1,7 @@
 package de.patgrosse.asyncfoldercompare.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
@@ -19,12 +9,23 @@ import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
 import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class GsonUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(GsonUtils.class);
     private static Gson gsonInstance;
 
     private GsonUtils() {
@@ -69,15 +70,52 @@ public final class GsonUtils {
 
     public static LastSettings readLastSettings() {
         try {
-            FileReader fr = new FileReader(new File("afc_settings.json"));
+            File file = getCreateSettingsFile();
+            LOG.info("Reading settings from file " + file);
+            FileReader fr = new FileReader(file);
             return getGson().fromJson(fr, LastSettings.class);
         } catch (FileNotFoundException e) {
             return new LastSettings();
+        } catch (IOException e) {
+            LOG.error("Could not read settings", e);
+            System.exit(1);
+            return null;
         }
     }
 
+    private static File getCreateSettingsFile() throws IOException {
+        Path path;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            path = Files.createDirectories(
+                    FileSystems.getDefault().getPath(
+                            System.getProperty("APPDATA"),
+                            "AsyncFolderCompare"
+                    )
+            );
+        } else if (SystemUtils.IS_OS_MAC) {
+            path = Files.createDirectories(
+                    FileSystems.getDefault().getPath(
+                            System.getProperty("user.home"),
+                            "Library", "Application Support", "AsyncFolderCompare"
+                    )
+            );
+        } else if (SystemUtils.IS_OS_UNIX) {
+            path = Files.createDirectories(
+                    FileSystems.getDefault().getPath(
+                            System.getProperty("user.home"),
+                            ".local", "share", "AsyncFolderCompare"
+                    )
+            );
+        } else {
+            throw new IOException("Unknown operating system");
+        }
+        return new File(path.toFile(), "afc_settings.json");
+    }
+
     public static void saveLastSettings(LastSettings lastSettings) throws IOException {
-        PrintWriter writer = new PrintWriter("afc_settings.json", "UTF-8");
+        File file = getCreateSettingsFile();
+        LOG.info("Saving settings to file " + file);
+        PrintWriter writer = new PrintWriter(file, "UTF-8");
         writer.write(getGson().toJson(lastSettings));
         writer.flush();
         writer.close();
