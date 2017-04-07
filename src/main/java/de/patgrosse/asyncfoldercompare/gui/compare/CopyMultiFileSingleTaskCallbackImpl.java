@@ -4,8 +4,11 @@ import de.patgrosse.asyncfoldercompare.utils.InterruptCopyFakeException;
 import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyMultiFileSingleTaskCallback;
 import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class CopyMultiFileSingleTaskCallbackImpl implements CopyMultiFileSingleTaskCallback {
+    private static final Logger LOG = LoggerFactory.getLogger(CopyMultiFileSingleTaskCallbackImpl.class);
     private static final int DELTA_TIME = 800000000;
 
     private CopyProgressDialog progmon;
@@ -46,8 +49,8 @@ public abstract class CopyMultiFileSingleTaskCallbackImpl implements CopyMultiFi
         }
         if (currentPercentage > nextLogPercentage) {
             nextLogPercentage += 0.1F;
-            if (AFCTreeGUI.LOG.isDebugEnabled()) {
-                AFCTreeGUI.LOG.debug(baseFileNameCache + " - " + String.format("%5.1f %%", currentPercentage * 100)
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(baseFileNameCache + " - " + String.format("%5.1f %%", currentPercentage * 100)
                         + " - " + VFSUtils.humanReadableByteCount(bytesPerSec, true) + "/s");
             }
         }

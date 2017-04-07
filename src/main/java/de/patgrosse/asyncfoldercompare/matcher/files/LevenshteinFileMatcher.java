@@ -1,23 +1,21 @@
 package de.patgrosse.asyncfoldercompare.matcher.files;
 
+import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
+import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
+import de.patgrosse.asyncfoldercompare.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
-import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
-import de.patgrosse.asyncfoldercompare.utils.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFile;
-
 public class LevenshteinFileMatcher extends FileMatcher {
     private static final int DIFF_LIMIT = 10;
-    private static final Logger LOG = LogManager.getLogger();
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(LevenshteinFileMatcher.class);
 
     public LevenshteinFileMatcher() {
         super("LevenshteinFileMatcher", MatchStrategy.MANY);

@@ -1,38 +1,26 @@
 package de.patgrosse.asyncfoldercompare.gui.start;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.gui.compare.AFCTreeGUI;
+import de.patgrosse.asyncfoldercompare.utils.FileTreeComparator;
+import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.vfs2.FileObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
-import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.gui.compare.AFCTreeGUI;
-import de.patgrosse.asyncfoldercompare.utils.FileTreeComparator;
-
 public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolder {
     private static final long serialVersionUID = -5693281016474396045L;
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(GUIPanel.class);
 
     private AFCGUIStarter parent;
 

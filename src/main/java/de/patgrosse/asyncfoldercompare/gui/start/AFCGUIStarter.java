@@ -1,32 +1,23 @@
 package de.patgrosse.asyncfoldercompare.gui.start;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
+import de.patgrosse.asyncfoldercompare.gui.GUITools;
+import de.patgrosse.asyncfoldercompare.startup.AFCEnviroment;
+import de.patgrosse.asyncfoldercompare.utils.GsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-
-import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
-import de.patgrosse.asyncfoldercompare.gui.GUITools;
-import de.patgrosse.asyncfoldercompare.startup.AFCEnviroment;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.utils.GsonUtils;
-
 public class AFCGUIStarter extends JFrame implements ActionListener {
     private static final long serialVersionUID = -6151375830605793263L;
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(AFCGUIStarter.class);
 
     private LastSettings lastSettings;
 

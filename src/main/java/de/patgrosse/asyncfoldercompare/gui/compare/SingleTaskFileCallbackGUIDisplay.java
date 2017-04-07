@@ -3,11 +3,14 @@ package de.patgrosse.asyncfoldercompare.gui.compare;
 import de.patgrosse.asyncfoldercompare.utils.InterruptCopyFakeException;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.QueuedCopyTask;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyMultiFileSingleTaskCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SingleTaskFileCallbackGUIDisplay extends CopyMultiFileSingleTaskCallbackImpl implements CopyMultiFileSingleTaskCallback {
+    private static final Logger LOG = LoggerFactory.getLogger(SingleTaskFileCallbackGUIDisplay.class);
     private QueuedCopyTask task;
 
     public SingleTaskFileCallbackGUIDisplay(Frame parent, QueuedCopyTask task) {
@@ -28,8 +31,8 @@ public class SingleTaskFileCallbackGUIDisplay extends CopyMultiFileSingleTaskCal
                         "<html>Operation was aborted!<br><b>" + sourceFileName + "</b> was not fully copied</html>",
                         "Operation terminated", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (AFCTreeGUI.LOG.isErrorEnabled()) {
-                    AFCTreeGUI.LOG.error("Crashed while copying " + sourceFileName, e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Crashed while copying " + sourceFileName, e);
                 }
                 JOptionPane.showMessageDialog(getProgmon().getParent(),
                         "<html>Operation has crashed!<br><b>" + sourceFileName + "</b> was not fully copied</html>",

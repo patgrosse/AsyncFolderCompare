@@ -1,25 +1,24 @@
 package de.patgrosse.asyncfoldercompare.matcher.folders;
 
+import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
+import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
+import de.patgrosse.asyncfoldercompare.utils.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RealFolder;
-import de.patgrosse.asyncfoldercompare.utils.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.constants.MatchStrategy;
-import de.patgrosse.asyncfoldercompare.matcher.MatchCallback;
-
 public class LevenshteinFolderMatcher extends FolderMatcher {
     private static final int DIFF_CHARS_LIMIT = 4;
     private static final double DIFF_PERCENTAGE_LIMIT = 0.2;
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(LevenshteinFolderMatcher.class);
 
     public LevenshteinFolderMatcher() {
         super("LevenshteinFolderMatcher", MatchStrategy.MANY);

@@ -17,8 +17,8 @@ import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyMultiFileMu
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyMultiFileSingleTaskCallback;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,8 @@ public class AFCTreeGUI extends JFrame implements CopyCallbackFactory {
             + "<tr><td>Current file:</td><td>%s</td></tr>"
             + "<tr><td>Current progress:</td><td>%5.1f %%, Speed: %7s/s</td></tr>" + "</tbody></table>";
     private static final String COPY_DIALOG_TEXT = "Do you really want to copy the selected files? This will possibly overwrite existing files.";
-    static final Logger LOG = LogManager.getLogger();
+
+    private static final Logger LOG = LoggerFactory.getLogger(AFCTreeGUI.class);
 
     private AFCTreeGUI(final FileTreeComparator comp, final ResultFolder resFolder, final FileObject foRootOld,
                        final FileObject foRootNew) throws FileSystemException {

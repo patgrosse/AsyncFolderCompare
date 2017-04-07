@@ -1,17 +1,15 @@
 package de.patgrosse.asyncfoldercompare.utils.fsthreads;
 
+import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyCallbackFactory;
+import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.FinishableCallback;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.CopyCallbackFactory;
-import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.FinishableCallback;
-
 public final class FileActionThreadPoolManager {
-    private static final Logger LOG = LogManager.getLogger();
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(FileActionThreadPoolManager.class);
     private static FileActionThreadPoolManager instance;
 
     private boolean initialized;

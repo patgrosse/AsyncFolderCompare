@@ -1,29 +1,21 @@
 package de.patgrosse.asyncfoldercompare.startup;
 
-import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
+import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.LastSettings;
+import de.patgrosse.asyncfoldercompare.gui.compare.AFCTreeGUI;
 import de.patgrosse.asyncfoldercompare.utils.FileTreeComparator;
+import de.patgrosse.asyncfoldercompare.utils.GsonUtils;
 import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.patgrosse.asyncfoldercompare.gui.compare.AFCTreeGUI;
-import de.patgrosse.asyncfoldercompare.utils.GsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CLIStarter {
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(CLIStarter.class);
 
     public static void main(String[] args) throws Exception {
         AFCEnviroment.initJVM();
@@ -53,7 +45,7 @@ public class CLIStarter {
         try {
             line = parser.parse(options, args);
         } catch (ParseException e) {
-            LOG.error(e);
+            LOG.error("CLI parsing error", e);
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("javaCommand", options, true);
             return;
