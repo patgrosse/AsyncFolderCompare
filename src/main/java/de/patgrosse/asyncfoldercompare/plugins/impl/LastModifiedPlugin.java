@@ -1,5 +1,6 @@
-package de.patgrosse.asyncfoldercompare.plugins;
+package de.patgrosse.asyncfoldercompare.plugins.impl;
 
+import de.patgrosse.asyncfoldercompare.plugins.SingleValueComparePlugin;
 import org.apache.commons.vfs2.FileObject;
 
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;

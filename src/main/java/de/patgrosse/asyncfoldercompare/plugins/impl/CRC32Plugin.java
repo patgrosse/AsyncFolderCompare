@@ -1,10 +1,11 @@
-package de.patgrosse.asyncfoldercompare.plugins;
+package de.patgrosse.asyncfoldercompare.plugins.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import de.patgrosse.asyncfoldercompare.plugins.SingleValueComparePlugin;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.vfs2.FileObject;

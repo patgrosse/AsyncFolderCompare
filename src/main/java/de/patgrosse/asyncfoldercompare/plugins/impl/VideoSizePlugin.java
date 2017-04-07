@@ -1,10 +1,11 @@
-package de.patgrosse.asyncfoldercompare.plugins;
+package de.patgrosse.asyncfoldercompare.plugins.impl;
 
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
+import de.patgrosse.asyncfoldercompare.plugins.SingleValueComparePlugin;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
