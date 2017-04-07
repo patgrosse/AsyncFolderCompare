@@ -65,7 +65,7 @@ public class JSONPanel extends JPanel implements AFCSettingsHolder, ActionListen
         gbcFolderField.fill = GridBagConstraints.HORIZONTAL;
         add(folderField, gbcFolderField);
 
-        folderSelect = new JButton("Lokal...");
+        folderSelect = new JButton("Local...");
         folderSelect.addActionListener(this);
         GridBagConstraints gbcFolderSelect = new GridBagConstraints();
         gbcFolderSelect.gridx = 2;
@@ -98,7 +98,7 @@ public class JSONPanel extends JPanel implements AFCSettingsHolder, ActionListen
         gbcJsonField.fill = GridBagConstraints.HORIZONTAL;
         add(jsonField, gbcJsonField);
 
-        jsonSelect = new JButton("Lokal...");
+        jsonSelect = new JButton("Local...");
         jsonSelect.addActionListener(this);
         GridBagConstraints gbcJsonSelect = new GridBagConstraints();
         gbcJsonSelect.gridx = 2;

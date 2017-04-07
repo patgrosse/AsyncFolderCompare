@@ -24,9 +24,9 @@ public class ResultFolderModel extends AbstractTreeTableModel {
         super(resultFolder);
         columnNames = new LinkedList<>();
         columnTypes = new LinkedList<>();
-        columnNames.add("Dateibaum");
+        columnNames.add("File tree");
         columnTypes.add(AbstractTreeTableModel.class);
-        columnNames.add("Gesamtergebnis");
+        columnNames.add("End result");
         columnTypes.add(CompleteObjectCompareResult.class);
         checkColumns = comp.getPluginCompareResultColumns();
         for (Pair<ComparePlugin, CompareCheck> column : checkColumns) {

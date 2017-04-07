@@ -87,7 +87,7 @@ public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolde
         gbcOldField.fill = GridBagConstraints.HORIZONTAL;
         add(oldField, gbcOldField);
 
-        oldSelect = new JButton("Lokal...");
+        oldSelect = new JButton("Local...");
         oldSelect.addActionListener(this);
         GridBagConstraints gbcOldSelect = new GridBagConstraints();
         gbcOldSelect.gridx = 2;
@@ -136,7 +136,7 @@ public class GUIPanel extends JPanel implements ActionListener, AFCSettingsHolde
         gbcNewField.fill = GridBagConstraints.HORIZONTAL;
         add(newField, gbcNewField);
 
-        newSelect = new JButton("Lokal...");
+        newSelect = new JButton("Local...");
         newSelect.addActionListener(this);
         GridBagConstraints gbcNewSelect = new GridBagConstraints();
         gbcNewSelect.gridx = 2;

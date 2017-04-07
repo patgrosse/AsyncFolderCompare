@@ -7,7 +7,7 @@ import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
 public class LastModifiedPlugin extends SingleValueComparePlugin {
 
     public LastModifiedPlugin() {
-        super("LastModifiedPlugin", "lastModified", "Änderungszeitpunkt");
+        super("LastModifiedPlugin", "lastModified", "Modified");
     }
 
     @Override

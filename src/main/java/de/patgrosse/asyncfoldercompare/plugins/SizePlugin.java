@@ -7,7 +7,7 @@ import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
 public class SizePlugin extends SingleValueComparePlugin {
 
     public SizePlugin() {
-        super("SizePlugin", "size", "Dateigröße");
+        super("SizePlugin", "size", "File size");
     }
 
     @Override
