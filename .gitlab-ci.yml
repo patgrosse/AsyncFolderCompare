@@ -1,0 +1,35 @@
+image: maven:3-jdk-8
+
+stages:
+  - build
+  - docs
+  - pages
+
+mvn-build:
+  script: "mvn install -B"
+  artifacts:
+    paths:
+      - "target/*-cli.jar"
+      - "target/*-gui.jar"
+
+mvn-javadocs:
+  stage: docs
+  script: "mvn javadoc:javadoc"
+  when: always
+  artifacts:
+    paths:
+      - "target/site/apidocs"
+
+pages:
+  stage: pages
+  dependencies:
+    - mvn-javadocs
+  when: always
+  script:
+    - "rm -rf public"
+    - "cp -r target/site/apidocs/* public"
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
