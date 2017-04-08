@@ -86,10 +86,6 @@
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
         </repository>
-        <repository>
-            <id>xuggle repo</id>
-            <url>http://www.dcm4che.org/maven2/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -155,9 +151,9 @@
             <version>1.7.25</version>
         </dependency>
         <dependency>
-            <groupId>xuggle</groupId>
-            <artifactId>xuggle-xuggler</artifactId>
-            <version>5.4</version>
+            <groupId>io.humble</groupId>
+            <artifactId>humble-video-all</artifactId>
+            <version>0.2.1</version>
         </dependency>
     </dependencies>
 </project>

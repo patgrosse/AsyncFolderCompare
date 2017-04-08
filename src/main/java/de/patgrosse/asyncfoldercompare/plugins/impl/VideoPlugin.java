@@ -1,9 +1,5 @@
 package de.patgrosse.asyncfoldercompare.plugins.impl;
 
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IContainer;
-import com.xuggle.xuggler.IStream;
-import com.xuggle.xuggler.IStreamCoder;
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
 import de.patgrosse.asyncfoldercompare.entities.compareresults.PluginFileCompareResultHolder;
 import de.patgrosse.asyncfoldercompare.plugins.ComparePlugin;
@@ -11,10 +7,16 @@ import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
 import de.patgrosse.asyncfoldercompare.utils.CompareHelper;
 import de.patgrosse.asyncfoldercompare.utils.FileAttributeCollector;
 import de.patgrosse.asyncfoldercompare.utils.FileAttributeDisposer;
+import io.humble.video.Decoder;
+import io.humble.video.Demuxer;
+import io.humble.video.DemuxerStream;
+import io.humble.video.MediaDescriptor.Type;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,12 +38,12 @@ public class VideoPlugin extends ComparePlugin {
 
     @Override
     public void generateDataForFile(FileObject file, FileAttributeCollector collector) throws Exception {
-        IStreamCoder coder = openXuggler(file);
-        if (coder != null) {
-            collector.setAttribute(KEY_VIDEO_SIZE, generateDataSize(coder));
-            collector.setAttribute(KEY_BITRATE, generateDataBitrate(coder));
-            collector.setAttribute(KEY_FRAME_RATE, generateDataFramerate(coder));
-            closeXuggler(coder);
+        Triple<Demuxer, DemuxerStream, Decoder> humbleStream = openHumble(file);
+        if (humbleStream != null) {
+            collector.setAttribute(KEY_VIDEO_SIZE, generateDataSize(humbleStream.getRight()));
+            collector.setAttribute(KEY_BITRATE, generateDataBitrate(humbleStream.getLeft()));
+            collector.setAttribute(KEY_FRAME_RATE, generateDataFramerate(humbleStream.getMiddle()));
+            closeHumble(humbleStream.getLeft());
         }
     }
 
@@ -59,40 +61,39 @@ public class VideoPlugin extends ComparePlugin {
         return new PluginFileCompareResultHolder(total, fullResult);
     }
 
-    private IStreamCoder openXuggler(FileObject file) {
-        IContainer container = IContainer.make();
-        int result = container.open(file.getPublicURIString(), IContainer.Type.READ, null);
-        if (!container.isOpened()) {
-            LOG.warn("Xuggler error: " + result);
-            return null;
-        } else {
-            for (int i = 0; i < container.getNumStreams(); i++) {
-                IStream stream = container.getStream(0);
-                IStreamCoder coder = stream.getStreamCoder();
-                if (coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
-                    return coder;
+    private Triple<Demuxer, DemuxerStream, Decoder> openHumble(FileObject file) throws IOException, InterruptedException {
+        final Demuxer demuxer = Demuxer.make();
+        try {
+            demuxer.open(file.getPublicURIString(), null, false, true, null, null);
+            for (int i = 0; i < demuxer.getNumStreams(); i++) {
+                DemuxerStream stream = demuxer.getStream(0);
+                Decoder coder = stream.getDecoder();
+                if (coder.getCodecType() == Type.MEDIA_VIDEO) {
+                    return Triple.of(demuxer, stream, coder);
                 }
             }
             LOG.warn("No video stream found");
-            container.close();
-            return null;
+            demuxer.close();
+        } catch (Exception e) {
+            LOG.warn("Could not open file for humble: " + e.getMessage());
         }
+        return null;
     }
 
-    private void closeXuggler(IStreamCoder coder) {
-        coder.getStream().getContainer().close();
+    private void closeHumble(Demuxer demuxer) throws IOException, InterruptedException {
+        demuxer.close();
     }
 
-    private String generateDataSize(IStreamCoder coder) {
+    private String generateDataSize(Decoder coder) {
         return coder.getWidth() + SIZE_SPLIT_STRING + coder.getHeight();
     }
 
-    private String generateDataBitrate(IStreamCoder coder) {
-        return Integer.toString(coder.getBitRate());
+    private String generateDataBitrate(Demuxer demuxer) {
+        return Integer.toString(demuxer.getBitRate());
     }
 
-    private String generateDataFramerate(IStreamCoder coder) {
-        return Double.toString(coder.getFrameRate().getValue());
+    private String generateDataFramerate(DemuxerStream stream) {
+        return Double.toString(stream.getFrameRate().getValue());
     }
 
     private PluginCompareResult compareSizes(String oldValue, String newValue) {
