@@ -17,7 +17,7 @@ import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
 import de.patgrosse.asyncfoldercompare.matcher.files.KodiLevenshteinFileMatcher;
 import de.patgrosse.asyncfoldercompare.matcher.folders.KodiLevenshteinFolderMatcher;
 import de.patgrosse.asyncfoldercompare.plugins.impl.SizePlugin;
-import de.patgrosse.asyncfoldercompare.plugins.impl.VideoSizePlugin;
+import de.patgrosse.asyncfoldercompare.plugins.impl.VideoPlugin;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.QueuedCopyTask;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.ByteTransferCallback;
 import org.apache.commons.lang3.tuple.Pair;
@@ -127,7 +127,7 @@ public final class VFSUtils {
                 new KodiLevenshteinFolderMatcher(), new HiddenFileFilter(), new HiddenFolderFilter());
         // comp.enablePlugin(new LastModifiedPlugin());
         comp.enablePlugin(new SizePlugin());
-        comp.enablePlugin(new VideoSizePlugin());
+        comp.enablePlugin(new VideoPlugin());
         return comp;
     }
 

@@ -1,9 +1,13 @@
 package de.patgrosse.asyncfoldercompare.entities.compareresults;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
+import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
+import de.patgrosse.asyncfoldercompare.utils.CompareHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CompleteFileCompareResultHolder {
     private CompleteObjectCompareResult total;
@@ -29,35 +33,8 @@ public class CompleteFileCompareResultHolder {
     }
 
     public void calculateTotal() {
-        total = CompleteObjectCompareResult.MATCH;
-        for (PluginFileCompareResultHolder pluginResult : pluginResults.values()) {
-            switch (pluginResult.getTotal()) {
-                case MATCH:
-                    break;
-                case DIFFER:
-                    total = CompleteObjectCompareResult.DIFFER;
-                    break;
-                case PREFERNEW:
-                    if (total == CompleteObjectCompareResult.MATCH) {
-                        total = CompleteObjectCompareResult.PREFERNEW;
-                    } else if (total != CompleteObjectCompareResult.PREFERNEW) {
-                        total = CompleteObjectCompareResult.DIFFER;
-                    }
-                    break;
-                case PREFEROLD:
-                    if (total == CompleteObjectCompareResult.MATCH) {
-                        total = CompleteObjectCompareResult.PREFEROLD;
-                    } else if (total != CompleteObjectCompareResult.PREFEROLD) {
-                        total = CompleteObjectCompareResult.DIFFER;
-                    }
-                    break;
-                case UNDEFINED:
-                    total = CompleteObjectCompareResult.UNDEFINED;
-                    return;
-                default:
-                    throw new IllegalStateException("Unexpected value " + pluginResult.getTotal());
-            }
-        }
+        List<PluginCompareResult> results = pluginResults.values().stream().map(PluginFileCompareResultHolder::getTotal).collect(Collectors.toList());
+        total = CompareHelper.pluginResultToCompleteResult(CompareHelper.combineResults(results));
     }
 
     public CompleteObjectCompareResult getTotal() {

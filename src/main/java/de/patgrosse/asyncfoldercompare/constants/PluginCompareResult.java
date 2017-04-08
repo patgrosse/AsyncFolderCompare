@@ -5,6 +5,7 @@ public enum PluginCompareResult {
     DIFFER("Differ"),
     PREFERNEW("Prefer new"),
     PREFEROLD("Prefer old"),
+    IGNORE("Ignore"),
     UNDEFINED("Undefined");
 
     private String text;
