@@ -16,7 +16,7 @@ mvn-build:
 mvn-javadocs:
   stage: docs
   dependencies: []
-  script: "mvn javadoc:javadoc"
+  script: "mvn javadoc:javadoc -B"
   when: always
   artifacts:
     paths:
