@@ -88,7 +88,7 @@ public final class GsonUtils {
         if (SystemUtils.IS_OS_WINDOWS) {
             path = Files.createDirectories(
                     FileSystems.getDefault().getPath(
-                            System.getProperty("APPDATA"),
+                            System.getenv("APPDATA"),
                             "AsyncFolderCompare"
                     )
             );
