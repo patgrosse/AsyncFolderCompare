@@ -71,7 +71,7 @@ public final class GsonUtils {
     public static LastSettings readLastSettings() {
         try {
             File file = getCreateSettingsFile();
-            LOG.info("Reading settings from file " + file);
+            LOG.info("Reading settings from file " + file.getAbsolutePath());
             FileReader fr = new FileReader(file);
             return getGson().fromJson(fr, LastSettings.class);
         } catch (FileNotFoundException e) {
@@ -114,7 +114,7 @@ public final class GsonUtils {
 
     public static void saveLastSettings(LastSettings lastSettings) throws IOException {
         File file = getCreateSettingsFile();
-        LOG.info("Saving settings to file " + file);
+        LOG.info("Saving settings to file " + file.getAbsolutePath());
         PrintWriter writer = new PrintWriter(file, "UTF-8");
         writer.write(getGson().toJson(lastSettings));
         writer.flush();

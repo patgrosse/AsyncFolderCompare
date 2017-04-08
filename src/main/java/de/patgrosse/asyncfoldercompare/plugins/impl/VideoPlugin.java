@@ -7,16 +7,14 @@ import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
 import de.patgrosse.asyncfoldercompare.utils.CompareHelper;
 import de.patgrosse.asyncfoldercompare.utils.FileAttributeCollector;
 import de.patgrosse.asyncfoldercompare.utils.FileAttributeDisposer;
-import io.humble.video.Decoder;
-import io.humble.video.Demuxer;
-import io.humble.video.DemuxerStream;
-import io.humble.video.MediaDescriptor.Type;
-import org.apache.commons.lang3.tuple.Triple;
+import net.filebot.mediainfo.MediaInfo;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.util.RandomAccessMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,12 +36,12 @@ public class VideoPlugin extends ComparePlugin {
 
     @Override
     public void generateDataForFile(FileObject file, FileAttributeCollector collector) throws Exception {
-        Triple<Demuxer, DemuxerStream, Decoder> humbleStream = openHumble(file);
-        if (humbleStream != null) {
-            collector.setAttribute(KEY_VIDEO_SIZE, generateDataSize(humbleStream.getRight()));
-            collector.setAttribute(KEY_BITRATE, generateDataBitrate(humbleStream.getLeft()));
-            collector.setAttribute(KEY_FRAME_RATE, generateDataFramerate(humbleStream.getMiddle()));
-            closeHumble(humbleStream.getLeft());
+        MediaInfo mi = openMediaInfo(file);
+        if (mi != null) {
+            collector.setAttribute(KEY_VIDEO_SIZE, generateDataSize(mi));
+            collector.setAttribute(KEY_BITRATE, generateDataBitrate(mi));
+            collector.setAttribute(KEY_FRAME_RATE, generateDataFramerate(mi));
+            closeMediaInfo(mi);
         }
     }
 
@@ -61,39 +59,41 @@ public class VideoPlugin extends ComparePlugin {
         return new PluginFileCompareResultHolder(total, fullResult);
     }
 
-    private Triple<Demuxer, DemuxerStream, Decoder> openHumble(FileObject file) throws IOException, InterruptedException {
-        final Demuxer demuxer = Demuxer.make();
+    private MediaInfo openMediaInfo(FileObject file) throws IOException, InterruptedException, URISyntaxException {
+        MediaInfo mi = new MediaInfo();
         try {
-            demuxer.open(file.getPublicURIString(), null, false, true, null, null);
-            for (int i = 0; i < demuxer.getNumStreams(); i++) {
-                DemuxerStream stream = demuxer.getStream(0);
-                Decoder coder = stream.getDecoder();
-                if (coder.getCodecType() == Type.MEDIA_VIDEO) {
-                    return Triple.of(demuxer, stream, coder);
-                }
-            }
-            LOG.warn("No video stream found");
-            demuxer.close();
+            mi.openViaRandomAccessContent(file.getContent().getRandomAccessContent(RandomAccessMode.READ));
         } catch (Exception e) {
-            LOG.warn("Could not open file for humble: " + e.getMessage());
+            LOG.warn("Could not open file for MediaInfo: " + e.getMessage());
+            return null;
         }
+        if (mi.streamCount(MediaInfo.StreamKind.Video) > 0) {
+            return mi;
+        }
+        mi.close();
         return null;
     }
 
-    private void closeHumble(Demuxer demuxer) throws IOException, InterruptedException {
-        demuxer.close();
+    private void closeMediaInfo(MediaInfo mi) throws IOException, InterruptedException {
+        mi.close();
     }
 
-    private String generateDataSize(Decoder coder) {
-        return coder.getWidth() + SIZE_SPLIT_STRING + coder.getHeight();
+    private String generateDataSize(MediaInfo mi) {
+        int width = Integer.parseInt(mi.get(MediaInfo.StreamKind.Video, 0, "Width",
+                MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        int height = Integer.parseInt(mi.get(MediaInfo.StreamKind.Video, 0, "Height",
+                MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name));
+        return width + SIZE_SPLIT_STRING + height;
     }
 
-    private String generateDataBitrate(Demuxer demuxer) {
-        return Integer.toString(demuxer.getBitRate());
+    private String generateDataBitrate(MediaInfo mi) {
+        return mi.get(MediaInfo.StreamKind.Video, 0, "BitRate",
+                MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
-    private String generateDataFramerate(DemuxerStream stream) {
-        return Double.toString(stream.getFrameRate().getValue());
+    private String generateDataFramerate(MediaInfo mi) {
+        return mi.get(MediaInfo.StreamKind.Video, 0, "FrameRate",
+                MediaInfo.InfoKind.Text, MediaInfo.InfoKind.Name);
     }
 
     private PluginCompareResult compareSizes(String oldValue, String newValue) {

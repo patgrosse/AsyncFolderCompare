@@ -151,9 +151,9 @@
             <version>1.7.25</version>
         </dependency>
         <dependency>
-            <groupId>io.humble</groupId>
-            <artifactId>humble-video-all</artifactId>
-            <version>0.2.1</version>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.4.0</version>
         </dependency>
     </dependencies>
 </project>

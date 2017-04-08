@@ -71,9 +71,9 @@ public class FileTreeComparator {
 
     public RootRealFolder mapFolder(FileObject directory) throws FileSystemException {
         RootRealFolder rfolder = new RootRealFolder();
-        LOG.info("Started mapping root folder " + directory.getName().getPath());
+        LOG.info("Started mapping root folder " + directory.getURL().getFile());
         mapFolder(rfolder, directory, new LinkedList<>());
-        LOG.info("Finished mapping root folder " + directory.getName().getPath());
+        LOG.info("Finished mapping root folder " + directory.getURL().getFile());
         return rfolder;
     }
 
@@ -88,7 +88,7 @@ public class FileTreeComparator {
         if (directory == null) {
             throw new IllegalArgumentException();
         }
-        LOG.debug("Collecting data for folder " + directory.getName().getPath());
+        LOG.debug("Collecting data for folder " + directory.getURL().getFile());
         for (FileObject file : directory.getChildren()) {
             if (file.equals(directory)) {
                 continue;
@@ -104,7 +104,7 @@ public class FileTreeComparator {
                 newRelativePath.add(file.getName().getBaseName());
                 mapFolder(rfolder, file, newRelativePath);
             } else {
-                LOG.debug("Collecting data for file " + file.getName().getPath());
+                LOG.debug("Collecting data for file " + file.getURL().getFile());
                 RealFile rfile = new RealFile(file.getName().getBaseName());
                 rfile.setRelativePath(relativePath);
                 if (fileFilter.isObjectFiltered(rfile)) {
