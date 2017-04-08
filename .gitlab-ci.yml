@@ -15,6 +15,7 @@ mvn-build:
 
 mvn-javadocs:
   stage: docs
+  dependencies: []
   script: "mvn javadoc:javadoc"
   when: always
   artifacts:
@@ -28,6 +29,7 @@ pages:
   when: always
   script:
     - "rm -rf public"
+    - "mkdir public"
     - "cp -r target/site/apidocs/* public"
   artifacts:
     paths:
