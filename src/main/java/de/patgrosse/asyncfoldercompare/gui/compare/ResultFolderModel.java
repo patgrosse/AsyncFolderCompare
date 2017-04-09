@@ -1,11 +1,5 @@
 package de.patgrosse.asyncfoldercompare.gui.compare;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
-import org.apache.commons.lang3.tuple.Pair;
-
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
 import de.patgrosse.asyncfoldercompare.entities.compareresults.CompleteFileCompareResultHolder;
 import de.patgrosse.asyncfoldercompare.entities.compareresults.PluginFileCompareResultHolder;
@@ -13,7 +7,12 @@ import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
 import de.patgrosse.asyncfoldercompare.gui.treetable.AbstractTreeTableModel;
 import de.patgrosse.asyncfoldercompare.plugins.ComparePlugin;
+import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
 import de.patgrosse.asyncfoldercompare.utils.FileTreeComparator;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ResultFolderModel extends AbstractTreeTableModel {
     private List<String> columnNames;
@@ -120,9 +119,9 @@ public class ResultFolderModel extends AbstractTreeTableModel {
                     if (check != null) {
                         CompleteFileCompareResultHolder fullResult = ((ResultFile) node).getFullResult();
                         if (fullResult != null) {
-                            PluginFileCompareResultHolder pluginResult = fullResult.getPluginResults(check.getLeft().getName());
+                            PluginFileCompareResultHolder pluginResult = fullResult.getPluginResult(check.getLeft());
                             if (pluginResult != null) {
-                                return pluginResult.getSubResults().get(check.getRight().getKeyName());
+                                return pluginResult.getSubResults().get(check.getRight());
                             }
                         }
                     }

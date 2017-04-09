@@ -1,6 +1,7 @@
 package de.patgrosse.asyncfoldercompare.gui.compare;
 
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
+import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -24,6 +25,19 @@ public class CompareResultTypeRenderer extends DefaultTableCellRenderer {
                     break;
                 case DELETED:
                     setForeground(Color.RED);
+                    break;
+                case PREFERNEW:
+                case PREFEROLD:
+                case DIFFER:
+                case UNDEFINED:
+                    setForeground(Color.BLUE);
+                    break;
+            }
+        } else if (value instanceof PluginCompareResult) {
+            PluginCompareResult result = (PluginCompareResult) value;
+            switch (result) {
+                case MATCH:
+                    setForeground(Color.LIGHT_GRAY);
                     break;
                 case PREFERNEW:
                 case PREFEROLD:

@@ -26,12 +26,14 @@ public class VideoPlugin extends ComparePlugin {
     private static final String KEY_BITRATE = "bitrate";
     private static final String KEY_FRAME_RATE = "fps";
 
+    private CompareCheck checkSize, checkBitrate, checkFramerate;
+
     public VideoPlugin() {
-        super("VideoPlugin", Arrays.asList(
-                new CompareCheck(KEY_VIDEO_SIZE, "Video size"),
-                new CompareCheck(KEY_BITRATE, "Bit rate"),
-                new CompareCheck(KEY_FRAME_RATE, "Frame rate")
-        ));
+        super("VideoPlugin");
+        checkSize = new CompareCheck(KEY_VIDEO_SIZE, "Video size", this::formatSize);
+        checkBitrate = new CompareCheck(KEY_BITRATE, "Bit rate", this::formatBitrate);
+        checkFramerate = new CompareCheck(KEY_FRAME_RATE, "Frame rate", this::formatFramerate);
+        setCheckNames(Arrays.asList(checkSize, checkBitrate, checkFramerate));
     }
 
     @Override
@@ -51,10 +53,10 @@ public class VideoPlugin extends ComparePlugin {
         PluginCompareResult bitrateResult = compareBitrate(disposerOld.getAttribute(KEY_BITRATE), disposerNew.getAttribute(KEY_BITRATE));
         PluginCompareResult framerateResult = compareFramerate(disposerOld.getAttribute(KEY_FRAME_RATE), disposerNew.getAttribute(KEY_FRAME_RATE));
 
-        Map<String, PluginCompareResult> fullResult = new HashMap<>();
-        fullResult.put(KEY_VIDEO_SIZE, sizeResult);
-        fullResult.put(KEY_BITRATE, bitrateResult);
-        fullResult.put(KEY_FRAME_RATE, framerateResult);
+        Map<CompareCheck, PluginCompareResult> fullResult = new HashMap<>();
+        fullResult.put(checkSize, sizeResult);
+        fullResult.put(checkBitrate, bitrateResult);
+        fullResult.put(checkFramerate, framerateResult);
         PluginCompareResult total = CompareHelper.combineResults(Arrays.asList(sizeResult, bitrateResult, framerateResult));
         return new PluginFileCompareResultHolder(total, fullResult);
     }
@@ -167,5 +169,19 @@ public class VideoPlugin extends ComparePlugin {
             return PluginCompareResult.PREFEROLD;
         }
         return PluginCompareResult.MATCH;
+    }
+
+    private String formatSize(String input) {
+        return input;
+    }
+
+    private String formatBitrate(String input) {
+        double kbps = Long.parseLong(input) / 1000D;
+        return String.format("%.2f", kbps) + " kbps";
+    }
+
+    private String formatFramerate(String input) {
+        double fps = Double.parseDouble(input);
+        return String.format("%.2f", fps) + " fps";
     }
 }

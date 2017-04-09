@@ -3,7 +3,7 @@ package de.patgrosse.asyncfoldercompare.entities.filesystem;
 import de.patgrosse.asyncfoldercompare.constants.CompareObjectType;
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
 
-public abstract class ResultPathObject<T> extends PathObject implements ResultObject {
+public abstract class ResultPathObject<T extends PathObject> extends PathObject implements ResultObject {
     private CompleteObjectCompareResult compareResult;
     private T correspondingOld, correnspondingNew;
 

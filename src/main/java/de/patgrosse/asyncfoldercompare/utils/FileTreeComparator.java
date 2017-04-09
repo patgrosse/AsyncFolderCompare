@@ -62,7 +62,7 @@ public class FileTreeComparator {
     public List<Pair<ComparePlugin, CompareCheck>> getPluginCompareResultColumns() {
         List<Pair<ComparePlugin, CompareCheck>> allCheckNames = new LinkedList<>();
         for (ComparePlugin plugin : enabledPlugins.values()) {
-            for (CompareCheck pluginCheck : plugin.getCheckNames()) {
+            for (CompareCheck pluginCheck : plugin.getChecks()) {
                 allCheckNames.add(Pair.of(plugin, pluginCheck));
             }
         }
@@ -276,7 +276,7 @@ public class FileTreeComparator {
             PluginFileCompareResultHolder results = plugin.compareFiles(
                     new FileAttributeDisposer(fileOld.getDataStorage().getAllData()),
                     new FileAttributeDisposer(fileNew.getDataStorage().getAllData()));
-            fullResult.setPluginResults(plugin.getName(), results);
+            fullResult.setPluginResults(plugin, results);
         }
         fullResult.calculateTotal();
         return fullResult;

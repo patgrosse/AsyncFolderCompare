@@ -2,34 +2,49 @@ package de.patgrosse.asyncfoldercompare.entities.compareresults;
 
 import de.patgrosse.asyncfoldercompare.constants.CompleteObjectCompareResult;
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
+import de.patgrosse.asyncfoldercompare.plugins.ComparePlugin;
 import de.patgrosse.asyncfoldercompare.utils.CompareHelper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CompleteFileCompareResultHolder {
     private CompleteObjectCompareResult total;
-    private Map<String, PluginFileCompareResultHolder> pluginResults;
+    private Map<ComparePlugin, PluginFileCompareResultHolder> pluginResults;
 
     public CompleteFileCompareResultHolder() {
         total = CompleteObjectCompareResult.MATCH;
-        pluginResults = new HashMap<>();
+        pluginResults = new TreeMap<>(Comparator.comparing(ComparePlugin::getName));
     }
 
-    public void setPluginResults(String pluginName, PluginFileCompareResultHolder results) {
-        if (pluginName == null || results == null) {
+    public void setPluginResults(ComparePlugin plugin, PluginFileCompareResultHolder results) {
+        if (plugin == null || results == null) {
             throw new IllegalArgumentException();
         }
-        pluginResults.put(pluginName, results);
+        pluginResults.put(plugin, results);
     }
 
-    public PluginFileCompareResultHolder getPluginResults(String pluginName) {
+    public PluginFileCompareResultHolder getPluginResult(ComparePlugin plugin) {
+        if (plugin == null) {
+            throw new IllegalArgumentException();
+        }
+        return pluginResults.get(plugin);
+    }
+
+    public PluginFileCompareResultHolder getPluginResultByName(String pluginName) {
         if (pluginName == null) {
             throw new IllegalArgumentException();
         }
-        return pluginResults.get(pluginName);
+        for (Map.Entry<ComparePlugin, PluginFileCompareResultHolder> pluginResult : pluginResults.entrySet()) {
+            if (pluginResult.getKey().getName().equals(pluginName)) {
+                return pluginResult.getValue();
+            }
+        }
+        return null;
+    }
+
+    public Map<ComparePlugin, PluginFileCompareResultHolder> getPluginResults() {
+        return Collections.unmodifiableMap(pluginResults);
     }
 
     public void calculateTotal() {

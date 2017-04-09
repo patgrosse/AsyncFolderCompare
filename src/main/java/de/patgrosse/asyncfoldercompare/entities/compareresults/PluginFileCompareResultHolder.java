@@ -1,19 +1,23 @@
 package de.patgrosse.asyncfoldercompare.entities.compareresults;
 
-import java.util.Map;
-
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
+import de.patgrosse.asyncfoldercompare.plugins.entities.CompareCheck;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class PluginFileCompareResultHolder {
     private PluginCompareResult total;
-    private Map<String, PluginCompareResult> subResults;
+    private Map<CompareCheck, PluginCompareResult> subResults;
 
-    public PluginFileCompareResultHolder(PluginCompareResult total, Map<String, PluginCompareResult> subResults) {
+    public PluginFileCompareResultHolder(PluginCompareResult total, Map<CompareCheck, PluginCompareResult> subResults) {
         if (total == null || subResults == null) {
             throw new IllegalArgumentException();
         }
         this.total = total;
-        this.subResults = subResults;
+        setSubResults(subResults);
     }
 
     public PluginCompareResult getTotal() {
@@ -27,15 +31,16 @@ public class PluginFileCompareResultHolder {
         this.total = total;
     }
 
-    public Map<String, PluginCompareResult> getSubResults() {
-        return subResults;
+    public Map<CompareCheck, PluginCompareResult> getSubResults() {
+        return Collections.unmodifiableMap(subResults);
     }
 
-    public void setSubResults(Map<String, PluginCompareResult> subResults) {
+    public void setSubResults(Map<CompareCheck, PluginCompareResult> subResults) {
         if (subResults == null) {
             throw new IllegalArgumentException();
         }
-        this.subResults = subResults;
+        this.subResults = new TreeMap<>(Comparator.comparing(CompareCheck::getDisplayName));
+        this.subResults.putAll(subResults);
     }
 
 }

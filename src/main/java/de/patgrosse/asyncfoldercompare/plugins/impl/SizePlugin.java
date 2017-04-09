@@ -1,9 +1,9 @@
 package de.patgrosse.asyncfoldercompare.plugins.impl;
 
-import de.patgrosse.asyncfoldercompare.plugins.SingleValueComparePlugin;
-import org.apache.commons.vfs2.FileObject;
-
 import de.patgrosse.asyncfoldercompare.constants.PluginCompareResult;
+import de.patgrosse.asyncfoldercompare.plugins.SingleValueComparePlugin;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.vfs2.FileObject;
 
 public class SizePlugin extends SingleValueComparePlugin {
 
@@ -29,4 +29,8 @@ public class SizePlugin extends SingleValueComparePlugin {
         return PluginCompareResult.MATCH;
     }
 
+    @Override
+    public String formatOutput(String input) {
+        return FileUtils.byteCountToDisplaySize(Long.parseLong(input));
+    }
 }
