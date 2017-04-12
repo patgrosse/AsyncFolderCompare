@@ -46,6 +46,7 @@ public class CompareHelper {
 
     public static CompleteObjectCompareResult pluginResultToCompleteResult(PluginCompareResult result) {
         switch (result) {
+            case IGNORE:
             case MATCH:
                 return CompleteObjectCompareResult.MATCH;
             case DIFFER:
@@ -54,6 +55,8 @@ public class CompareHelper {
                 return CompleteObjectCompareResult.PREFERNEW;
             case PREFEROLD:
                 return CompleteObjectCompareResult.PREFEROLD;
+            case UNDEFINED:
+                return CompleteObjectCompareResult.UNDEFINED;
         }
         return null;
     }
