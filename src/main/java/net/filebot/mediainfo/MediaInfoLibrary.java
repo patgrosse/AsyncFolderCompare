@@ -16,7 +16,7 @@ public interface MediaInfoLibrary extends Library {
 
 	// libmediainfo for linux depends on libzen, so we need to load dependencies first, because we know where our native libs are (e.g. Java Web Start Cache).
 	// if we do not, the system will look for dependencies, but only in the library path
-	Library LIB_ZEN = Platform.isLinux() ? (Library) Native.loadLibrary("zen", Library.class) : null;
+	Library LIB_ZEN = Platform.isLinux() ? Native.loadLibrary("zen", Library.class) : null;
 
 	MediaInfoLibrary INSTANCE = (MediaInfoLibrary) Native.loadLibrary("mediainfo", MediaInfoLibrary.class, singletonMap(OPTION_FUNCTION_MAPPER, new FunctionMapper() {
 
@@ -37,7 +37,7 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Open a file and collect information about it (technical information and tags).
 	 *
-	 * @param handle
+	 * @param handle Handle
 	 * @param file
 	 *            full name of the file to open
 	 * @return 1 if file was opened, 0 if file was not not opened
@@ -47,7 +47,7 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Configure or get information about MediaInfo.
 	 *
-	 * @param handle
+	 * @param handle Handle
 	 * @param option
 	 *            The name of option
 	 * @param value
@@ -59,7 +59,7 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Get all details about a file.
 	 *
-	 * @param handle
+	 * @param handle Handle
 	 * @return All details about a file in one string
 	 */
 	WString Inform(Pointer handle);
@@ -67,7 +67,7 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Get a piece of information about a file (parameter is a string).
 	 *
-	 * @param handle
+	 * @param handle Handle
 	 * @param streamKind
 	 *            Kind of stream (general, video, audio...)
 	 * @param streamNumber
@@ -85,12 +85,12 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Get a piece of information about a file (parameter is an integer).
 	 *
-	 * @param handle
+	 * @param handle handle
 	 * @param streamKind
 	 *            Kind of stream (general, video, audio...)
 	 * @param streamNumber
 	 *            Stream number in Kind of stream (first, second...)
-	 * @param parameter
+	 * @param parameterIndex
 	 *            Parameter you are looking for in the stream (Codec, width, bitrate...), in integer format (first parameter, second parameter...)
 	 * @param infoKind
 	 *            Kind of information you want about the parameter (the text, the measure, the help...)
@@ -101,7 +101,7 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Count of streams of a stream kind (StreamNumber not filled), or count of piece of information in this stream.
 	 *
-	 * @param handle
+	 * @param handle Handle
 	 * @param streamKind
 	 *            Kind of stream (general, video, audio...)
 	 * @param streamNumber
@@ -113,14 +113,14 @@ public interface MediaInfoLibrary extends Library {
 	/**
 	 * Close a file opened before with Open().
 	 *
-	 * @param handle
+	 * @param handle Handle to close
 	 */
 	void Close(Pointer handle);
 
 	/**
 	 * Dispose of a handle created with New().
 	 *
-	 * @param handle
+	 * @param handle Handle to delete
 	 */
 	void Delete(Pointer handle);
 

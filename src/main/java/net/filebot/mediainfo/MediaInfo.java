@@ -3,10 +3,7 @@ package net.filebot.mediainfo;
 import com.sun.jna.Platform;
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.RandomAccessContent;
-import org.apache.commons.vfs2.util.RandomAccessMode;
 
 import java.io.Closeable;
 import java.io.File;
@@ -51,9 +48,9 @@ public class MediaInfo implements Closeable {
         throw new IOException("Failed to open media file: " + path);
     }
 
-    private boolean openViaBuffer(RandomAccessFile f) throws IOException {
+    private boolean openViaBuffer(RandomAccessFile f) throws IOException, IllegalArgumentException {
         byte[] buffer = new byte[4 * 1024 * 1024]; // use large buffer to reduce JNA calls
-        int read = -1;
+        int read;
 
         if (0 == MediaInfoLibrary.INSTANCE.Open_Buffer_Init(handle, f.length(), 0)) {
             return false;
@@ -77,12 +74,16 @@ public class MediaInfo implements Closeable {
         return true;
     }
 
-    public boolean openViaRandomAccessContent(RandomAccessContent cont) throws IOException {
+    public void openViaRandomAccessContent(RandomAccessContent cont) throws IOException {
         byte[] buffer = new byte[4 * 1024 * 1024]; // use large buffer to reduce JNA calls
-        int read = -1;
+        int read;
+
+        if (cont.length() < 64 * 1024) {
+            throw new IllegalArgumentException("Invalid media file");
+        }
 
         if (0 == MediaInfoLibrary.INSTANCE.Open_Buffer_Init(handle, cont.length(), 0)) {
-            return false;
+            throw new IOException("Could not open media file");
         }
 
         do {
@@ -100,7 +101,6 @@ public class MediaInfo implements Closeable {
         } while (read > 0);
 
         MediaInfoLibrary.INSTANCE.Open_Buffer_Finalize(handle);
-        return true;
     }
 
     public synchronized String inform() {
