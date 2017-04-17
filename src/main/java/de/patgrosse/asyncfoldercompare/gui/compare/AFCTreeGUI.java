@@ -27,6 +27,7 @@ public class AFCTreeGUI extends JFrame implements CopyCallbackFactory, MouseList
     private FileTreeComparator comp;
     private FileObject foRootOld;
     private FileObject foRootNew;
+    private boolean skipCopyQuestion;
 
     private AFCTreeGUI(final FileTreeComparator comp, final ResultFolder resFolder, final FileObject foRootOld,
                        final FileObject foRootNew) throws FileSystemException {
@@ -68,6 +69,13 @@ public class AFCTreeGUI extends JFrame implements CopyCallbackFactory, MouseList
         return foRootNew;
     }
 
+    public boolean isSkipCopyQuestion() {
+        return skipCopyQuestion;
+    }
+
+    public void setSkipCopyQuestion(boolean skipCopyQuestion) {
+        this.skipCopyQuestion = skipCopyQuestion;
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {

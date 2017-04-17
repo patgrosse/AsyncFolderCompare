@@ -24,6 +24,7 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
 
     private AFCTreeGUI parent;
     private ResultPathObject<?> resultPathObject;
+    private boolean skipDialogToSet;
 
     public AFCPopupMenu(AFCTreeGUI parent, ResultPathObject<?> resultPathObject) {
         this.parent = parent;
@@ -116,51 +117,64 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
                 AFCDetailsDialog dialog = new AFCDetailsDialog(parent, resultPathObject);
                 dialog.setVisible(true);
             } else if (event.getActionCommand().equals(CopyAction.OLDTONEW.toString())) {
-                int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    FileObject oldFo = VFSUtils.resolveFile(oldObject, parent.getFoRootOld());
-                    FileObject newFo = VFSUtils.resolveFile(oldObject, parent.getFoRootNew());
-                    LOG.info("User: copy old to new");
-                    FileActionThreadPoolManager.getInstance()
-                            .startCopy(new QueuedCopyTask(oldFo, newFo, CopyAction.OLDTONEW), parent);
+                if (!checkCopyDialog()) {
+                    return;
                 }
+                FileObject oldFo = VFSUtils.resolveFile(oldObject, parent.getFoRootOld());
+                FileObject newFo = VFSUtils.resolveFile(oldObject, parent.getFoRootNew());
+                LOG.info("User: copy old to new");
+                FileActionThreadPoolManager.getInstance()
+                        .startCopy(new QueuedCopyTask(oldFo, newFo, CopyAction.OLDTONEW), parent);
             } else if (event.getActionCommand().equals(CopyAction.NEWTOOLD.toString())) {
-                int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    FileObject oldFo = VFSUtils.resolveFile(newObject, parent.getFoRootOld());
-                    FileObject newFo = VFSUtils.resolveFile(newObject, parent.getFoRootNew());
-                    LOG.info("User: copy new to old");
-                    FileActionThreadPoolManager.getInstance()
-                            .startCopy(new QueuedCopyTask(newFo, oldFo, CopyAction.NEWTOOLD), parent);
+                if (!checkCopyDialog()) {
+                    return;
                 }
+                FileObject oldFo = VFSUtils.resolveFile(newObject, parent.getFoRootOld());
+                FileObject newFo = VFSUtils.resolveFile(newObject, parent.getFoRootNew());
+                LOG.info("User: copy new to old");
+                FileActionThreadPoolManager.getInstance()
+                        .startCopy(new QueuedCopyTask(newFo, oldFo, CopyAction.NEWTOOLD), parent);
             } else if (event.getActionCommand().equals(CopyAction.OLDTOTARGET.toString())) {
-                int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    VFSUtils.ensureTargetObjectExists();
-                    final FileObject oldFo = VFSUtils.resolveFile(oldObject, parent.getFoRootOld());
-                    final FileObject targetFo = VFSUtils.resolveFile(oldObject, VFSUtils.getTargetObject());
-                    LOG.info("User: copy old to target");
-                    FileActionThreadPoolManager.getInstance().startCopy(
-                            new QueuedCopyTask(oldFo, targetFo, CopyAction.OLDTOTARGET), parent);
-
+                if (!checkCopyDialog()) {
+                    return;
                 }
+                VFSUtils.ensureTargetObjectExists();
+                FileObject oldFo = VFSUtils.resolveFile(oldObject, parent.getFoRootOld());
+                FileObject targetFo = VFSUtils.resolveFile(oldObject, VFSUtils.getTargetObject());
+                LOG.info("User: copy old to target");
+                FileActionThreadPoolManager.getInstance().startCopy(
+                        new QueuedCopyTask(oldFo, targetFo, CopyAction.OLDTOTARGET), parent);
             } else if (event.getActionCommand().equals(CopyAction.NEWTOTARGET.toString())) {
-                int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    VFSUtils.ensureTargetObjectExists();
-                    FileObject newFo = VFSUtils.resolveFile(newObject, parent.getFoRootNew());
-                    FileObject targetFo = VFSUtils.resolveFile(newObject, VFSUtils.getTargetObject());
-                    LOG.info("User: copy new to target");
-                    FileActionThreadPoolManager.getInstance().startCopy(
-                            new QueuedCopyTask(newFo, targetFo, CopyAction.NEWTOTARGET), parent);
+                if (!checkCopyDialog()) {
+                    return;
                 }
+                VFSUtils.ensureTargetObjectExists();
+                FileObject newFo = VFSUtils.resolveFile(newObject, parent.getFoRootNew());
+                FileObject targetFo = VFSUtils.resolveFile(newObject, VFSUtils.getTargetObject());
+                LOG.info("User: copy new to target");
+                FileActionThreadPoolManager.getInstance().startCopy(
+                        new QueuedCopyTask(newFo, targetFo, CopyAction.NEWTOTARGET), parent);
             }
         } catch (FileSystemException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean checkCopyDialog() {
+        if (!parent.isSkipCopyQuestion()) {
+            JPanel jpanel = new JPanel();
+            jpanel.setLayout(new BoxLayout(jpanel, BoxLayout.Y_AXIS));
+            jpanel.add(new JLabel(COPY_DIALOG_TEXT));
+            JCheckBox checkBox = new JCheckBox("Do not show this dialog again for this session", true);
+            checkBox.addChangeListener(e -> skipDialogToSet = checkBox.isSelected());
+            jpanel.add(checkBox);
+            int result = JOptionPane.showConfirmDialog(parent, jpanel, "Start copy",
+                    JOptionPane.YES_NO_OPTION);
+            if (result != JOptionPane.OK_OPTION) {
+                return false;
+            }
+            parent.setSkipCopyQuestion(skipDialogToSet);
+        }
+        return true;
     }
 }
