@@ -1,41 +1,32 @@
 package de.patgrosse.asyncfoldercompare.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.real.RootRealFolder;
 import de.patgrosse.asyncfoldercompare.entities.storage.Credentials;
 import de.patgrosse.asyncfoldercompare.entities.storage.ScanSession;
+import de.patgrosse.asyncfoldercompare.filter.files.HiddenFileFilter;
+import de.patgrosse.asyncfoldercompare.filter.folders.HiddenFolderFilter;
 import de.patgrosse.asyncfoldercompare.matcher.files.KodiLevenshteinFileMatcher;
 import de.patgrosse.asyncfoldercompare.matcher.folders.KodiLevenshteinFolderMatcher;
 import de.patgrosse.asyncfoldercompare.plugins.impl.SizePlugin;
 import de.patgrosse.asyncfoldercompare.plugins.impl.VideoPlugin;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.QueuedCopyTask;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.ByteTransferCallback;
+import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.MultiFileTransferCallback;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
 import org.apache.commons.net.io.Util;
-import org.apache.commons.vfs2.AllFileSelector;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.NameScope;
-import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
-import de.patgrosse.asyncfoldercompare.filter.files.HiddenFileFilter;
-import de.patgrosse.asyncfoldercompare.filter.folders.HiddenFolderFilter;
-import de.patgrosse.asyncfoldercompare.utils.fsthreads.callbacks.MultiFileTransferCallback;
+import java.io.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class VFSUtils {
     private VFSUtils() {
@@ -49,8 +40,12 @@ public final class VFSUtils {
         return VFS.getManager().resolveFile(vfsURI, opts);
     }
 
+    public static void ensureTargetObjectExists() throws FileSystemException {
+        getTargetObject().createFolder();
+    }
+
     public static FileObject getTargetObject() throws FileSystemException {
-        return VFS.getManager().resolveFile(new File(".").getAbsolutePath());
+        return VFS.getManager().resolveFile(new File("target").getAbsolutePath());
     }
 
     public static FileObject resolveFile(PathObject pathObject, FileObject foRoot) throws FileSystemException {
@@ -169,7 +164,7 @@ public final class VFSUtils {
                 currentFileNumber++;
                 final int currentFileNumberF = currentFileNumber;
                 callback.nextFile(currentFileNumberF, amountOfFilesF, srcFile);
-                VFSUtils.copyFile(srcFile, destFile, callback::bytesTransferred);
+                VFSUtils.copyFile(srcFile, destFile, callback);
             } else if (srcFile.getType().hasChildren()) {
                 destFile.createFolder();
             }

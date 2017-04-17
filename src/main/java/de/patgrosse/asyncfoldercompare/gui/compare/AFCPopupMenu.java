@@ -139,6 +139,7 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
                 int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
                         JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
+                    VFSUtils.ensureTargetObjectExists();
                     final FileObject oldFo = VFSUtils.resolveFile(oldObject, parent.getFoRootOld());
                     final FileObject targetFo = VFSUtils.resolveFile(oldObject, VFSUtils.getTargetObject());
                     LOG.info("User: copy old to target");
@@ -150,6 +151,7 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
                 int result = JOptionPane.showConfirmDialog(parent, COPY_DIALOG_TEXT, "Start copy",
                         JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.OK_OPTION) {
+                    VFSUtils.ensureTargetObjectExists();
                     FileObject newFo = VFSUtils.resolveFile(newObject, parent.getFoRootNew());
                     FileObject targetFo = VFSUtils.resolveFile(newObject, VFSUtils.getTargetObject());
                     LOG.info("User: copy new to target");
