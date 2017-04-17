@@ -30,28 +30,28 @@ public class VideoPlugin extends ComparePlugin {
 
     public VideoPlugin() {
         super("VideoPlugin");
-        checkSize = new CompareCheck(KEY_VIDEO_SIZE, "Video size", this::formatSize);
-        checkBitrate = new CompareCheck(KEY_BITRATE, "Bit rate", this::formatBitrate);
-        checkFramerate = new CompareCheck(KEY_FRAME_RATE, "Frame rate", this::formatFramerate);
-        setCheckNames(Arrays.asList(checkSize, checkBitrate, checkFramerate));
+        checkSize = new CompareCheck(this, KEY_VIDEO_SIZE, "Video size", this::formatSize);
+        checkBitrate = new CompareCheck(this, KEY_BITRATE, "Bit rate", this::formatBitrate);
+        checkFramerate = new CompareCheck(this, KEY_FRAME_RATE, "Frame rate", this::formatFramerate);
+        setChecks(Arrays.asList(checkSize, checkBitrate, checkFramerate));
     }
 
     @Override
     public void generateDataForFile(FileObject file, FileAttributeCollector collector) throws Exception {
         MediaInfo mi = openMediaInfo(file);
         if (mi != null) {
-            collector.setAttribute(KEY_VIDEO_SIZE, generateDataSize(mi));
-            collector.setAttribute(KEY_BITRATE, generateDataBitrate(mi));
-            collector.setAttribute(KEY_FRAME_RATE, generateDataFramerate(mi));
+            collector.setAttribute(checkSize, generateDataSize(mi));
+            collector.setAttribute(checkBitrate, generateDataBitrate(mi));
+            collector.setAttribute(checkFramerate, generateDataFramerate(mi));
             closeMediaInfo(mi);
         }
     }
 
     @Override
     public PluginFileCompareResultHolder compareFiles(FileAttributeDisposer disposerOld, FileAttributeDisposer disposerNew) {
-        PluginCompareResult sizeResult = compareSizes(disposerOld.getAttribute(KEY_VIDEO_SIZE), disposerNew.getAttribute(KEY_VIDEO_SIZE));
-        PluginCompareResult bitrateResult = compareBitrate(disposerOld.getAttribute(KEY_BITRATE), disposerNew.getAttribute(KEY_BITRATE));
-        PluginCompareResult framerateResult = compareFramerate(disposerOld.getAttribute(KEY_FRAME_RATE), disposerNew.getAttribute(KEY_FRAME_RATE));
+        PluginCompareResult sizeResult = compareSizes(disposerOld.getAttribute(checkSize), disposerNew.getAttribute(checkSize));
+        PluginCompareResult bitrateResult = compareBitrate(disposerOld.getAttribute(checkBitrate), disposerNew.getAttribute(checkBitrate));
+        PluginCompareResult framerateResult = compareFramerate(disposerOld.getAttribute(checkFramerate), disposerNew.getAttribute(checkFramerate));
 
         Map<CompareCheck, PluginCompareResult> fullResult = new HashMap<>();
         fullResult.put(checkSize, sizeResult);

@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class FileTreeComparator {
-    private static Logger LOG = LoggerFactory.getLogger(FileTreeComparator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileTreeComparator.class);
+
     private Map<String, ComparePlugin> enabledPlugins;
     private FileMatcher fileMatcher;
     private FolderMatcher folderMatcher;
@@ -53,6 +54,18 @@ public class FileTreeComparator {
         return enabledPlugins.remove(name) != null;
     }
 
+    public CompareCheck getCompareCheck(CompareCheckReference checkRef) {
+        if (checkRef == null) {
+            throw new IllegalArgumentException();
+        }
+        ComparePlugin plugin = enabledPlugins.get(checkRef.getPluginRef());
+        if (plugin == null) {
+            return null;
+        }
+        return plugin.getChecks().stream().filter(check -> check.getKeyName().equals(checkRef.getCheckRef()))
+                .findFirst().orElse(null);
+    }
+
     public ScanSession createScanSession(RootRealFolder folder) {
         List<String> pluginNames = new LinkedList<>();
         pluginNames.addAll(enabledPlugins.keySet());
@@ -61,11 +74,8 @@ public class FileTreeComparator {
 
     public List<Pair<ComparePlugin, CompareCheck>> getPluginCompareResultColumns() {
         List<Pair<ComparePlugin, CompareCheck>> allCheckNames = new LinkedList<>();
-        for (ComparePlugin plugin : enabledPlugins.values()) {
-            for (CompareCheck pluginCheck : plugin.getChecks()) {
-                allCheckNames.add(Pair.of(plugin, pluginCheck));
-            }
-        }
+        enabledPlugins.values().forEach(comparePlugin -> comparePlugin.getChecks()
+                .forEach(compareCheck -> allCheckNames.add(Pair.of(comparePlugin, compareCheck))));
         return allCheckNames;
     }
 

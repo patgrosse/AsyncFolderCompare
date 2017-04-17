@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 public abstract class CopyMultiFileSingleTaskCallbackImpl implements CopyMultiFileSingleTaskCallback {
     private static final Logger LOG = LoggerFactory.getLogger(CopyMultiFileSingleTaskCallbackImpl.class);
     private static final int DELTA_TIME = 800000000;
+    private static final String STATUS_HTML = "<html><table><tbody>" + "<tr><td></td><td>File %d of %d</td></tr>"
+            + "<tr><td>Current file:</td><td>%s</td></tr>"
+            + "<tr><td>Current progress:</td><td>%5.1f %%, Speed: %7s/s</td></tr>" + "</tbody></table>";
 
     private CopyProgressDialog progmon;
 
@@ -41,7 +44,7 @@ public abstract class CopyMultiFileSingleTaskCallbackImpl implements CopyMultiFi
 			 * currentAmountOfBytes + " delta: " + deltaSeconds + " bps: " +
 			 * bytesPerSec); System.out.println();
 			 */
-            progmon.setDescriptionText(String.format(AFCTreeGUI.STATUS_HTML, currentFileNumber, totalFiles,
+            progmon.setDescriptionText(String.format(STATUS_HTML, currentFileNumber, totalFiles,
                     baseFileNameCache, currentPercentage * 100, VFSUtils.humanReadableByteCount(bytesPerSec, true)));
             progmon.setProgress((currentFileNumber - 1 + currentPercentage) / totalFiles * 100);
             lastTime = newTime;

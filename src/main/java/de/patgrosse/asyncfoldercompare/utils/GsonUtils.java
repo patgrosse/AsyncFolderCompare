@@ -33,7 +33,11 @@ public final class GsonUtils {
 
     public static Gson getGson() {
         if (gsonInstance == null) {
-            gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+            gsonInstance = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .setPrettyPrinting()
+                    .enableComplexMapKeySerialization()
+                    .create();
         }
         return gsonInstance;
     }

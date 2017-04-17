@@ -5,6 +5,7 @@ import de.patgrosse.asyncfoldercompare.entities.filesystem.PathObject;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.ResultPathObject;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFile;
 import de.patgrosse.asyncfoldercompare.entities.filesystem.result.ResultFolder;
+import de.patgrosse.asyncfoldercompare.utils.CompareCheckReference;
 import de.patgrosse.asyncfoldercompare.utils.VFSUtils;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.FileActionThreadPoolManager;
 import de.patgrosse.asyncfoldercompare.utils.fsthreads.QueuedCopyTask;
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 public class AFCPopupMenu extends JPopupMenu implements ActionListener {
     private static final Logger LOG = LoggerFactory.getLogger(AFCPopupMenu.class);
     private static final String COPY_DIALOG_TEXT = "Do you really want to copy the selected files? This will possibly overwrite existing files.";
+
     private AFCTreeGUI parent;
     private ResultPathObject<?> resultPathObject;
 
@@ -53,7 +55,6 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
         {
             JMenuItem details = new JMenuItem("Compare details...");
             details.setActionCommand("details");
-            details.setEnabled(oldObject != null && newObject != null);
             details.addActionListener(this);
             add(details);
         }
@@ -92,14 +93,14 @@ public class AFCPopupMenu extends JPopupMenu implements ActionListener {
         String str = "Size: ";
         if (file.getCorrespondingOld() != null) {
             str += VFSUtils.humanReadableByteCount(
-                    Long.parseLong(file.getCorrespondingOld().getDataStorage().getData("size")), true);
+                    Long.parseLong(file.getCorrespondingOld().getDataStorage().getData(new CompareCheckReference("SizePlugin", "size"))), true);
         } else {
             str += " / ";
         }
         str += " -> ";
         if (file.getCorrespondingNew() != null) {
             str += VFSUtils.humanReadableByteCount(
-                    Long.parseLong(file.getCorrespondingNew().getDataStorage().getData("size")), true);
+                    Long.parseLong(file.getCorrespondingNew().getDataStorage().getData(new CompareCheckReference("SizePlugin", "size"))), true);
         } else {
             str += " / ";
         }

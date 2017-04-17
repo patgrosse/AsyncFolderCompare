@@ -27,7 +27,7 @@ public abstract class ComparePlugin {
         return Collections.unmodifiableList(checks);
     }
 
-    public void setCheckNames(List<CompareCheck> checks) {
+    public void setChecks(List<CompareCheck> checks) {
         this.checks = new LinkedList<>(checks);
     }
 

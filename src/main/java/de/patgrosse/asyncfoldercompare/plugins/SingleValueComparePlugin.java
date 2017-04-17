@@ -16,20 +16,20 @@ public abstract class SingleValueComparePlugin extends ComparePlugin {
 
     public SingleValueComparePlugin(String name, String compareKeyName, String compareCheckName) {
         super(name);
-        check = new CompareCheck(compareKeyName, compareCheckName, this::formatOutput);
-        setCheckNames(Collections.singletonList(check));
+        check = new CompareCheck(this, compareKeyName, compareCheckName, this::formatOutput);
+        setChecks(Collections.singletonList(check));
     }
 
     @Override
     public void generateDataForFile(FileObject file, FileAttributeCollector collector) throws Exception {
-        collector.setAttribute(check.getKeyName(), generateSingleDataForFile(file));
+        collector.setAttribute(check, generateSingleDataForFile(file));
     }
 
     @Override
     public PluginFileCompareResultHolder compareFiles(FileAttributeDisposer disposerOld,
                                                       FileAttributeDisposer disposerNew) {
-        String oldValue = disposerOld.getAttribute(check.getKeyName());
-        String newValue = disposerNew.getAttribute(check.getKeyName());
+        String oldValue = disposerOld.getAttribute(check);
+        String newValue = disposerNew.getAttribute(check);
         PluginCompareResult type;
         if (oldValue == null || newValue == null) {
             type = PluginCompareResult.UNDEFINED;
